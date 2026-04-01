@@ -3,7 +3,7 @@ const passport = require("passport");
 const router = express.Router();
 
 const { register, login, githubCallback, logout, getAllUsers, getUserById, updateUser, deleteUser } = require("../controllers/userController");
-const { registerRules, loginRules, validate } = require("../middleware/validation");
+const { registerRules, updateRegisterRules, loginRules, validate } = require("../middleware/validation");
 const auth = require("../middleware/auth");
 const role = require("../middleware/role");
 
@@ -37,7 +37,7 @@ router.post("/logout", logout);
 router.get("/:id", getUserById);
 
 // UPDATE user
-router.put("/:id", registerRules(), validate, updateUser);
+router.put("/:id", updateRegisterRules(), validate, updateUser);
 
 // DELETE user
 router.delete("/:id", auth, role("admin"), deleteUser);

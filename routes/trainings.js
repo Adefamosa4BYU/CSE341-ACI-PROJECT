@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require("../middleware/auth");
 const role = require("../middleware/role");
-const { trainingRules, validate } = require("../middleware/validation");
+const { trainingRules, updateTrainingRules, validate } = require("../middleware/validation");
 
 const { 
   getAllTrainings, 
@@ -30,7 +30,7 @@ router.post('/', auth, role("admin", "staff"), trainingRules(), validate, create
 // PUT to update a single Training
 // #swagger.tags = ['Training']
 // #swagger.path = '/api/trainings/{id}'
-router.put('/:id', auth, role("admin", "staff"), trainingRules(), validate, updateTraining);
+router.put('/:id', auth, role("admin", "staff"), updateTrainingRules(), validate, updateTraining);
 
 // DELETE to delete a single Training
 // #swagger.tags = ['Training']

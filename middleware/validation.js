@@ -64,6 +64,64 @@ exports.registerRules = () => {
   ];
 };
 
+exports.updateRegisterRules = () => {
+  return [
+    // firstName (optional)
+    body("firstName")
+      .optional()
+      .trim()
+      .isLength({ min: 2 })
+      .withMessage("First name must be at least 2 characters"),
+
+    // lastName (optional)
+    body("lastName")
+      .optional()
+      .trim()
+      .isLength({ min: 2 })
+      .withMessage("Last name must be at least 2 characters"),
+
+    // Email (optional + must not belong to another user)
+    body("email")
+      .optional()
+      .trim()
+      .isEmail()
+      .withMessage("Valid email is required")
+      .normalizeEmail()
+      .custom(async (email, { req }) => {
+        const existingUser = await User.findOne({ email });
+
+        if (existingUser && existingUser._id.toString() !== req.params.id) {
+          throw new Error("Email already exists. Please use another.");
+        }
+      }),
+
+    // Password (optional)
+    body("password")
+      .optional()
+      .trim()
+      .isStrongPassword({
+        minLength: 6,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+      .withMessage("Password must include uppercase, lowercase, and number"),
+
+    // Phone (optional)
+    body("phone")
+      .optional()
+      .isMobilePhone()
+      .withMessage("Invalid phone number"),
+
+    // Location (optional)
+    body("location")
+      .optional()
+      .isLength({ min: 2 })
+      .withMessage("Location must be valid"),
+  ];
+};
+
 
 exports.loginRules = () => {
   return [
@@ -128,6 +186,62 @@ exports.trainingRules = () => {
       .withMessage("Location must be valid"),
 
     // Capacity (optional but must be number)
+    body("capacity")
+      .optional()
+      .isInt({ min: 1 })
+      .withMessage("Capacity must be a number greater than 0")
+      .toInt(),
+
+    // Instructor (optional)
+    body("instructor")
+      .optional()
+      .isLength({ min: 2 })
+      .withMessage("Instructor name must be valid"),
+
+    // Duration (optional)
+    body("duration")
+      .optional()
+      .isLength({ min: 2 })
+      .withMessage("Duration must be valid"),
+  ];
+};
+
+exports.updateTrainingRules = () => {
+  return [
+
+    // Title (optional)
+    body("title")
+      .optional()
+      .trim()
+      .isLength({ min: 3 })
+      .withMessage("Title must be at least 3 characters"),
+
+    // Description (optional)
+    body("description")
+      .optional()
+      .isLength({ min: 5 })
+      .withMessage("Description must be at least 5 characters"),
+
+    // Date (optional)
+    body("date")
+      .optional()
+      .isISO8601()
+      .withMessage("Date must be valid (YYYY-MM-DD)")
+      .toDate(),
+
+    // Level (optional)
+    body("level")
+      .optional()
+      .isIn(["beginner", "intermediate", "advanced"])
+      .withMessage("Level must be beginner, intermediate, or advanced"),
+
+    // Location (optional)
+    body("location")
+      .optional()
+      .isLength({ min: 2 })
+      .withMessage("Location must be valid"),
+
+    // Capacity (optional)
     body("capacity")
       .optional()
       .isInt({ min: 1 })
