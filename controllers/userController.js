@@ -174,7 +174,18 @@ exports.updateUser = async (req, res, next) => {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    res.json({ success: true, data: updatedUser });
+    res.json({ 
+      success: true, 
+      data: {
+        id: updatedUser._id,
+        firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        email: updatedUser.email,
+        phone: updatedUser.phone,
+        location: updatedUser.location
+      }
+    
+    });
   } catch (err) {
     next(err);
   }
