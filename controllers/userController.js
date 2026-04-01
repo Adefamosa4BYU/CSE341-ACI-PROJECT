@@ -109,14 +109,7 @@ exports.getAllUsers = async (req, res, next) => {
     const user = await User.find();
     res.json({ 
       success: true, 
-      data: {
-        id: user._id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phone: user.phone,
-        location: user.location
-      } 
+      data: user
     });
   } catch (err) {
     next(err);
