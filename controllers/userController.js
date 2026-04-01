@@ -15,16 +15,34 @@ exports.register = async (req, res, next) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-      const user = await User.create({
-          firstName,
-          lastName,
-          phone,
-          location,
-          email,
-          password: hashedPassword
-      });
+    const user = await User.create({
+      firstName,
+      lastName,
+      phone,
+      location,
+      email,
+      password: hashedPassword
+    });
 
-    res.status(201).json({ success: true, message: "Registration successfully" });
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
+    );
+
+    res.status(201).json({
+      success: true,
+      message: "Registration successfully",
+      token,
+      data: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phone: user.phone,
+        location: user.location
+      }
+    });
 
   } catch (err) {
     next(err);
@@ -116,9 +134,9 @@ exports.getUserById = async (req, res, next) => {
 exports.updateUser = async (req, res, next) => {
   // #swagger.tags = ['User']
   // #swagger.path = '/api/user/{id}'
-   const { firstName, lastName, email, phone, location } = req.body;
+  const { firstName, lastName, email, phone, location } = req.body;
 
-   const userId = req.params.id
+  const userId = req.params.id
   try {
     const updatedUser = await User.findByIdAndUpdate(
       // req.params.id,
