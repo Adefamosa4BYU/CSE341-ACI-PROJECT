@@ -5,7 +5,7 @@ const doc = {
         title: 'ACI Tech Hub API',
         description: 'This API provides endpoints for managing USER and TRAINING'
     },
-    host: 'localhost:8080',
+    host: 'https://cse341-aci-project.onrender.com/',
     basePath: '/api',
     schemes: ['http', 'https'],
     securityDefinitions: {
