@@ -106,8 +106,18 @@ exports.getAllUsers = async (req, res, next) => {
   // #swagger.tags = ['User']
   // #swagger.path = '/api/user/'
   try {
-    const users = await User.find();
-    res.json({ success: true, data: users });
+    const user = await User.find();
+    res.json({ 
+      success: true, 
+      data: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phone: user.phone,
+        location: user.location
+      } 
+    });
   } catch (err) {
     next(err);
   }
@@ -124,7 +134,16 @@ exports.getUserById = async (req, res, next) => {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    res.json({ success: true, data: user });
+    res.json({ success: true,
+      data: {
+        id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phone: user.phone,
+        location: user.location
+      }
+    });
   } catch (err) {
     next(err);
   }
@@ -141,11 +160,13 @@ exports.updateUser = async (req, res, next) => {
     const updatedUser = await User.findByIdAndUpdate(
       // req.params.id,
       userId,
-      firstName,
-      lastName,
-      email,
-      phone,
-      location,
+      {
+        firstName,
+        lastName,
+        email,
+        phone,
+        location,
+      },
       { new: true, runValidators: true }
     );
 
